@@ -6,6 +6,9 @@ import numpy
 import random
 import itertools
 
+import matplotlib.pyplot as plt
+import networkx as nx
+
 from deap import algorithms
 from deap import base
 from deap import creator
@@ -21,10 +24,7 @@ from test_manager import Test_Manager
 
 test_manager = Test_Manager(Tests)
 
-def test_individual(a, b):
-	return a + b
-
-print(test_manager.evaluate_all_tests(test_individual))
+print(test_manager.test_functions)
 
 # =========================================================================
 # =========================== Arithmetic Ops  =============================
@@ -92,12 +92,12 @@ def eval_tests(individual):
 # =============================  Gen Algo  ================================
 # =========================================================================
 
-pset = gp.PrimitiveSetTyped("MAIN", itertools.repeat(float, 57), bool, "IN")
+pset = gp.PrimitiveSetTyped("MAIN", [float, float], float)
 
 # boolean operators
-pset.addPrimitive(logic_and, [bool, bool], bool)
-pset.addPrimitive(logic_or, [bool, bool], bool)
-pset.addPrimitive(logic_not, [bool], bool)
+# pset.addPrimitive(logic_and, [bool, bool], bool)
+# pset.addPrimitive(logic_or, [bool, bool], bool)
+# pset.addPrimitive(logic_not, [bool], bool)
 
 pset.addPrimitive(add, [float,float], float)
 pset.addPrimitive(sub, [float,float], float)
@@ -108,20 +108,20 @@ pset.addPrimitive(div, [float,float], float)
 # Define a new if-then-else function
 
 
-pset.addPrimitive(lt, [float, float], bool)
-pset.addPrimitive(eq, [float, float], bool)
-pset.addPrimitive(if_then_else, [bool, float, float], float)
+# pset.addPrimitive(lt, [float, float], bool)
+# pset.addPrimitive(eq, [float, float], bool)
+# pset.addPrimitive(if_then_else, [bool, float, float], float)
 
 # terminals
-pset.addEphemeralConstant("rand100", lambda: random.random() * 100, float)
-pset.addTerminal(False, bool)
-pset.addTerminal(True, bool)
+# pset.addEphemeralConstant("rand100", lambda: random.random() * 100, float)
+# pset.addTerminal(False, bool)
+# pset.addTerminal(True, bool)
 
-creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+creator.create("FitnessMax", base.Fitness, weights=(1.0, -1.0))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
-toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=2)
+toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=0, max_=3)
 toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
@@ -129,7 +129,7 @@ toolbox.register("compile", gp.compile, pset=pset)
 toolbox.register("evaluate", eval_tests)
 toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("mate", gp.cxOnePoint)
-toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
+toolbox.register("expr_mut", gp.genFull, min_=0, max_=3)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 def main():
@@ -142,9 +142,13 @@ def main():
     stats.register("min", numpy.min)
     stats.register("max", numpy.max)
     
-    algorithms.eaSimple(pop, toolbox, 0.5, 0.2, 40, stats, halloffame=hof)
+    algorithms.eaSimple(pop, toolbox, 0.5, 0.2, 100, stats, halloffame=hof)
 
     return pop, stats, hof
 
 if __name__ == "__main__":
-    main()
+	pop, stats, hof = main()
+
+	gp.PrimitiveTree(hof[0])
+
+

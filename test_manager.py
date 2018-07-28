@@ -23,22 +23,27 @@ class Test_Manager:
 		return abs(a - b) / (abs(a) + abs(b) + self.EPS)
 
 	def evaluate_test(self, test, compiled_code):
+
 		try:
+
 			passed, similarity = test(compiled_code, self.smape)
 
 			if passed:
-				return (self.PASS, err)
+				return (self.PASS, similarity)
 			else:
-				return (self.FAIL, err)
-		except:
+				return (self.FAIL, similarity)
+		except Exception as e:
+			print(e)
 			return (self.FAIL, self.DIFF)
 
 	def evaluate_all_tests(self, compiled_code):
+
 
 		total_passed = 0
 		total_error	 = 0
 
 		for test_function in self.test_functions:
+
 			p, e = self.evaluate_test(test_function, compiled_code)
 
 			total_passed += p
