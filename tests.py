@@ -1,4 +1,3 @@
-from types import FunctionType
 import random
 
 
@@ -38,3 +37,5 @@ class Tests:
 
 	test_1 = test_1
 	test_2 = test_2
+
+
