@@ -141,14 +141,26 @@ def main():
     stats.register("std", numpy.std)
     stats.register("min", numpy.min)
     stats.register("max", numpy.max)
-    
+
     algorithms.eaSimple(pop, toolbox, 0.5, 0.2, 100, stats, halloffame=hof)
 
     return pop, stats, hof
 
 if __name__ == "__main__":
 	pop, stats, hof = main()
+	import matplotlib.pyplot as plt
+	import networkx as nx
+	import pygraphviz as pgv
+	import graphviz
+	from networkx.drawing.nx_agraph import graphviz_layout
+	expr = gp.PrimitiveTree(hof[0])
+	g = nx.Graph()
+	nodes, edges, labels = gp.graph(expr)
+	g.add_nodes_from(nodes)
+	g.add_edges_from(edges)
+	pos = graphviz_layout(g, prog="dot")
 
-	gp.PrimitiveTree(hof[0])
-
-
+	nx.draw_networkx_nodes(g, pos)
+	nx.draw_networkx_edges(g, pos)
+	nx.draw_networkx_labels(g, pos, labels)
+	plt.show()
