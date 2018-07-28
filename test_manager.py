@@ -17,7 +17,6 @@ class Test_Manager:
 		if similarity_function is None:
 			self.similarity_function = self.smape
 		else:
-			print("hello world")
 			self.similarity_function = similarity_function
 
 	def smape(self, a, b):
@@ -26,6 +25,7 @@ class Test_Manager:
 	def evaluate_test(self, test, compiled_code):
 
 		try:
+
 			passed, similarity = test(compiled_code, self.similarity_function)
 
 			if passed:

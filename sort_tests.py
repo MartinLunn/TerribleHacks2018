@@ -1,83 +1,36 @@
+from types import FunctionType
 import random
+import time
 
+<<<<<<< HEAD
+import pandas
 
 def test_1(compiled_code, similarity_metric):
 
-		n = 10
+		data = pandas.read_csv("./data.csv")
 
-		arr = random.sample(range(1, 15), n)
+		features = ["a_" + str(i + 1) for i in range(7)]
 
-		expected = sorted(arr)
+		for row in data.iterrows():
+			data = row[1].values.tolist()[1:-1]
+			mpg  = row[1].values.tolist()[0]
 
-		result = compiled_code(arr)
+		expected = mpg
+=======
+random.seed(time.time())
 
-		err    = similarity_metric(expected, result)
+def test_1(compiled_code, similarity_metric):
 
-		return (result == expected, err)
+		n = 2
 
-def test_2(compiled_code, similarity_metric):
-		n = 10
-
-		arr = random.sample(range(1, 15), n)
-
-		expected = sorted(arr)
-
-		result = compiled_code(arr)
-
-		err    = similarity_metric(expected, result)
-
-		return (result == expected, err)
-
-def test_3(compiled_code, similarity_metric):
-
-		n = 10
-
-		arr = random.sample(range(1, 15), n)
+		arr = [1, 2]
 
 		expected = sorted(arr)
 
 		result = compiled_code(arr)
+>>>>>>> ad69d090f391e3b83b16acb24fecdd955a1f1665
 
-		err    = similarity_metric(expected, result)
-
-		return (result == expected, err)
-
-def test_4(compiled_code, similarity_metric):
-		n = 10
-
-		arr = random.sample(range(1, 15), n)
-
-		expected = sorted(arr)
-
-		result = compiled_code(arr)
-
-		err    = similarity_metric(expected, result)
-
-		return (result == expected, err)
-
-def test_5(compiled_code, similarity_metric):
-
-		n = 10
-
-		arr = random.sample(range(1, 15), n)
-
-		expected = sorted(arr)
-
-		result = compiled_code(arr)
-
-		err    = similarity_metric(expected, result)
-
-		return (result == expected, err)
-
-def test_6(compiled_code, similarity_metric):
-		n = 10
-
-		arr = random.sample(range(1, 15), n)
-
-		expected = sorted(arr)
-
-		result = compiled_code(arr)
-
+		result = compiled_code(*data)
 		err    = similarity_metric(expected, result)
 
 		return (result == expected, err)
@@ -85,8 +38,3 @@ def test_6(compiled_code, similarity_metric):
 class Sort_Tests:
 
 	test_1 = test_1
-	test_2 = test_2
-	test_3 = test_3
-	test_4 = test_4
-	test_5 = test_5
-	test_6 = test_6
