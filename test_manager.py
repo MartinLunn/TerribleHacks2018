@@ -1,8 +1,10 @@
+from types import FunctionType
+
 class Test_Manager:
 
-	def __init__(self, test_functions, similarity_function=None):
+	def __init__(self, test_class, similarity_function=None):
 
-		self.test_functions = test_functions
+		self.test_functions = [y for x, y in test_class.__dict__.items() if callable(y)]
 
 		self.PASS = 1
 		self.FAIL = 0
@@ -31,13 +33,13 @@ class Test_Manager:
 		except:
 			return (self.FAIL, self.DIFF)
 
-	def evaluate_all_test(self, compiled_code):
+	def evaluate_all_tests(self, compiled_code):
 
 		total_passed = 0
 		total_error	 = 0
 
 		for test_function in self.test_functions:
-			p, e = test_function(compiled_code, self.smape)
+			p, e = self.evaluate_test(test_function, compiled_code)
 
 			total_passed += p
 			total_error  += e
